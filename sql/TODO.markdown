@@ -5,8 +5,8 @@ Address
 - [] address      varchar(255)
 
 Company
-- [] company_id   int auto_increment primary
-- [] company_name varchar(50)
+- [x] company_id   int auto_increment primary
+- [x] company_name varchar(50)
 - [] budget       int
 - [] address_id   int foreign
 
