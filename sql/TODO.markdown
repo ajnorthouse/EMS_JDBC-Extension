@@ -1,7 +1,8 @@
 #Tables:
-[ ] Address
-- [ ] address_id	int auto_increment primary
-- [ ] address		varchar(255)
+
+[x] Address
+- [x] address_id	int auto_increment primary
+- [x] address		varchar(255)
 
 [ ] Company
 - [ ] company_id	int auto_increment primary
