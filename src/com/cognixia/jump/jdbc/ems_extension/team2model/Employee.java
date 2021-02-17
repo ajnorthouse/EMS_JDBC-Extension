@@ -1,4 +1,4 @@
-package com.cognixia.jump.jdbc.ems_extension.team2;
+package com.cognixia.jump.jdbc.ems_extension.team2model;
 
 import java.io.Serializable;
 /**

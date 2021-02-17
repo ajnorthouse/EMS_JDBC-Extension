@@ -1,7 +1,9 @@
-package com.cognixia.jump.jdbc.ems_extension.team2;
+package com.cognixia.jump.jdbc.ems_extension.team2model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import com.cognixia.jump.jdbc.ems_extension.team2.OverBudgetException;
 
 public class Company implements Serializable{
 

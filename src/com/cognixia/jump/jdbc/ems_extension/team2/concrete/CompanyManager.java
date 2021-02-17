@@ -1,7 +1,11 @@
-package com.cognixia.jump.jdbc.ems_extension.team2;
+package com.cognixia.jump.jdbc.ems_extension.team2.concrete;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import com.cognixia.jump.jdbc.ems_extension.team2model.Company;
+import com.cognixia.jump.jdbc.ems_extension.team2model.Department;
+import com.cognixia.jump.jdbc.ems_extension.team2model.Employee;
 /***
  * 
  * @author Alex Donaldson
