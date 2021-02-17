@@ -1,0 +1,18 @@
+In MySQL Workbench:
+	1) Click on Server in menu at the top.
+	2) Click "Export Data"
+
+
+In the new menu:
+	1) Select the database
+	2) Select the table you want to export
+	3) Select if you want to dump the structure, the data, or both.
+	4) Select the path you want to save the file.
+
+
+With Eclipse and the file location open:
+	1) Drag the file into the project folder / package you want it in.
+	2) Add a message to the commit.
+	3) Commit the file.
+	4) Pull.
+	5) Push the changes.
