@@ -9,3 +9,5 @@ CREATE table department
     comp_id INT NOT NULL,
     FOREIGN KEY (comp_id) references company(comp_id)
 );
+
+#raynmund smells like cheese.
