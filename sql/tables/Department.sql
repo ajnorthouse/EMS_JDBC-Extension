@@ -10,4 +10,4 @@ CREATE table department
     FOREIGN KEY (comp_id) references company(comp_id)
 );
 
-#raynmund smells like cheese.
+#Blaziken is the best pokemon
