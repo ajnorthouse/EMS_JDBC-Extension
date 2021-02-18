@@ -10,9 +10,6 @@ public class Address {
 	
 	private static int idCounter = 0;
 	
-	
-	
-	
 	public Address(int id, String streetAddr, String city, char[] state, String zipCode) {
 		super();
 		this.id = id;

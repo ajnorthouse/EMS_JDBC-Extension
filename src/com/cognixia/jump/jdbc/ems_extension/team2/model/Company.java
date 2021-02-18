@@ -8,14 +8,12 @@ public class Company {
 
 	private static final int DEFAULT_BUDGET = 1000000;
 	private static final String DEFAULT_NAME = "Default Company Name";
-	private static final String DEFAULT_LOCATION = "123 Sesame Street";
 	private static int idCounter = 0;
 	
 	private int id;
 	private String name;
 	private ArrayList<Department> depts;
 	private int budget;
-	private String location;
 	
 	// Constructors
 	/*
@@ -26,33 +24,23 @@ public class Company {
 	 * 
 	 */
 	
-	public Company(String name, int budget, String location, ArrayList<Department> depts) {
+	public Company(String name, int budget, ArrayList<Department> depts) {
 		super();
 		this.id = generateNewId();
 		this.name = name;
 		this.depts = depts;
 		this.budget = budget;
-		this.location = location;
 	}
 
 
-	public Company(String name, int budget, String location) {
-		super();
-		this.id = generateNewId();
-		this.name = name;
-		this.depts = new ArrayList<Department>();
-		this.budget = budget;
-		this.location = location;
-	}
-	
 	public Company(String name, int budget) {
 		super();
 		this.id = generateNewId();
 		this.name = name;
 		this.depts = new ArrayList<Department>();
 		this.budget = budget;
-		this.location = DEFAULT_LOCATION;
 	}
+	
 	
 	public Company(String name) {
 		super();
@@ -60,7 +48,6 @@ public class Company {
 		this.name = name;
 		this.depts = new ArrayList<Department>();
 		this.budget = DEFAULT_BUDGET;
-		this.location = DEFAULT_LOCATION;
 	}
 	
 	public Company() {
@@ -69,7 +56,6 @@ public class Company {
 		this.name = DEFAULT_NAME;
 		this.depts = new ArrayList<Department>();
 		this.budget = DEFAULT_BUDGET;
-		this.location = DEFAULT_LOCATION;
 	}
 
 	
@@ -212,14 +198,6 @@ public class Company {
 		this.budget = budget;
 	}
 
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
 	/*
 	 * Returns the department in depts with the given id; if the department
 	 * doesn't exist, returns null.
@@ -236,15 +214,14 @@ public class Company {
 
 	@Override
 	public String toString() {
-		return "Company [id=" + id + ", name=" + name + ", depts=" + depts + ", budget=" + budget + ", location="
-				+ location + "]";
+		return "Company [id=" + id + ", name=" + name + ", depts=" + depts + ", budget=" + budget + "]";
 	}
 	
 	//specialized toString-like methods:
 	//Lists the company's information & size of depts
 	public String listInfo() {
 		return "Company [id = " + id + ", name = " + name + ", active departments=" + depts.size()
-				+ ", budget = " + budget + ", location = " + location + "]";
+				+ ", budget = " + budget + "]";
 	}
 	//Lists the company's assigned departments
 	public String listDepartments() {
