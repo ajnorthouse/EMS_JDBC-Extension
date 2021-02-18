@@ -1,3 +1,4 @@
+SELECT * FROM department;
 
 # comp_id: 1 - List of departments
 INSERT INTO department(dept_id, dept_name, dept_phone_num, dept_budget, comp_id)
