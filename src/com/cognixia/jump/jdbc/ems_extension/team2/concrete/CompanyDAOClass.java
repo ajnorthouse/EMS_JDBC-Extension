@@ -15,7 +15,7 @@ import com.cognixia.jump.jdbc.ems_extension.team2.model.Department;
 public class CompanyDAOClass implements CompanyDAO {
 	
 	Connection conn = ConnectionManager.getConnection();
-	private String idMatchClause = " WHERE comp_id = ? ";
+	private String idMatchClause = " WHERE company.comp_id = ? ";
 	private String companySelectClause = " SELECT c.*, a.address FROM company AS c INNER JOIN address AS a on c.address_id = a.address_id ";
 	
 	@Override
@@ -63,10 +63,17 @@ public class CompanyDAOClass implements CompanyDAO {
 	@Override
 	public boolean createCompany(Company c) {
 		// TODO Auto-generated method stub
-		
-		//Gonna have to handle address weirdly
-		
-		return false;
+		String createQuery = "INSERT INTO company (comp_name, comp_budget) VALUES( ? , ? )";
+		try {
+			PreparedStatement createStmt = conn.prepareStatement(createQuery);
+			createStmt.setString(1, c.getName()); 
+			createStmt.setInt(2, c.getBudget()); 
+			return createStmt.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+
 	}
 
 	@Override
@@ -89,14 +96,26 @@ public class CompanyDAOClass implements CompanyDAO {
 	public boolean updateCompany(Company c) {
 		// TODO Auto-generated method stub
 		
-		//String updateQuery = "UPDATE Customers SET ContactName = , City= 'Frankfurt'";
-		
-		return false;
+		String updateQuery = " UPDATE company SET comp_name = ? , City = ? " + idMatchClause;
+		try {
+			PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
+			updateStmt.setString(1, c.getName());
+			updateStmt.setInt(2, c.getBudget());
+			updateStmt.setInt(3, c.getId());
+			return updateStmt.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
 	public List<Department> getCompanyDepartments(Company c) {
 		// TODO Auto-generated method stub
+		String deptsQuery = " SELECT d.* FROM department AS d INNER JOIN company AS c on d.comp_id = c.comp_id " + idMatchClause;
+		List<Department> list = new ArrayList<Department>();
+		
+		
 		return null;
 	}
 
@@ -106,7 +125,6 @@ public class CompanyDAOClass implements CompanyDAO {
 		int id = rs.getInt("comp_id");
 		String name = rs.getString("comp_name");
 		int budget = rs.getInt("comp_budget");
-		String address = rs.getString("address");
 		Company toReturn = new Company(name, budget);
 		toReturn.setId(id);
 		return toReturn;
