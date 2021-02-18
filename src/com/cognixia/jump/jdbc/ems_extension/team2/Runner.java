@@ -202,8 +202,9 @@ public class Runner {
 				System.out.println("--What is the Zip Code?");
 				zip = scanner.nextLine();
 				tempAddress = new Address(street, city, state, zip);
-				if (addressDAO.createAddress(tempAddress)) {
-					System.out.println("Address successfully added!");
+				int tempAddressId = addressDAO.createAddress(tempAddress);
+				if (tempAddressId != 0) {
+					System.out.println("Address successfully added! ID: " + tempAddressId);
 				} else {
 					System.out.println("Failure. :<");
 				}
@@ -215,8 +216,7 @@ public class Runner {
 				System.out.println("--What is the Address ID?");
 				addressId = Integer.parseInt(scanner.nextLine());
 				
-				tempAddress = addressDAO.getAddress(addressId);
-				if (addressDAO.deleteAddress(tempAddress)) {
+				if (addressDAO.deleteAddress(addressId)) {
 					System.out.println("Successfully deleted address!");
 				} else {
 					System.out.println("Failure. :<");
@@ -505,8 +505,8 @@ public class Runner {
 		
 		
 		System.out.println("Select from the following Company options:");
-		System.out.println("1: List the Company's Info & Active Departments\n"
-							+ "2: Update the Company's Info\n" + "3: Reset All Data");
+		System.out.println("1: List the Company's Info\n"
+							+ "2: Update the Company's Info\n" + "3: Delete ALL data associated with Company");
 		int userInput = Integer.parseInt(scanner.nextLine());
 		System.out.println();
 		
@@ -515,9 +515,7 @@ public class Runner {
 			case 1:
 				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 				//prints out found info
-				System.out.println("Printing info:\n"
-						+ tempCompany.listInfo());
-				System.out.println(tempCompany.listDepartments());
+				System.out.println("Printing info:\n" + tempCompany.listInfo());
 				break;
 			
 			
@@ -563,7 +561,7 @@ public class Runner {
 					System.out.println("Exiting Program.");
 					System.exit(0);
 				} else {
-					System.out.println("There was an issue resetting the company.");
+					System.out.println("There was an issue deleting the company.");
 				}
 				break;
 			
