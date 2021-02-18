@@ -559,37 +559,5 @@ public class EMSRunner {
 			scanner.nextLine();
 		}
 	}
-	
-	
-	public static void testing() {
-		//testy objects
-		FileHandler testyFiler = FileHandler.getInstance();
-		Employee testyBoy = new Employee("Bob", "Joe", "Prospective Employee", "9999999999");
-		Department testyGroup = new Department("Accounting", "9999999999", 500000);
-		Company testyComp = new Company();
-		
-		//combining the employee, department, and company objects
-		testyGroup.addEmployee(testyBoy);
-		testyComp.addDepartment(testyGroup);
 
-		//printing them out to see their values
-		System.out.println(testyBoy);
-		System.out.println(testyGroup);
-		System.out.println(testyComp);
-		System.out.println();
-		
-		//writing to file
-		testyFiler.writeToFile(testyComp);
-		
-		
-		//creating objects from a file read
-		Company testCompany2 = (Company) testyFiler.readFromFile();
-		Department testDepartment2 = testCompany2.getDepts().get(0);
-		Employee testEmployee2 = testDepartment2.getEmployee().get(0);
-
-		//printing them out to see their values
-		System.out.println(testCompany2);
-		System.out.println(testDepartment2);
-		System.out.println(testEmployee2);
-	}
 }
