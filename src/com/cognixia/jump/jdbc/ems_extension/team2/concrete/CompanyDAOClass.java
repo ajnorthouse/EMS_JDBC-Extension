@@ -23,14 +23,16 @@ public class CompanyDAOClass implements CompanyDAO {
 		// TODO Auto-generated method stub
 		
 		String allCompsQuery = companySelectClause;
-		PreparedStatement allCompsStmt = conn.prepareStatement(allCompsQuery);
-		
 		List<Company> list = new ArrayList<Company>();
-		ResultSet compResults = allCompsStmt.executeQuery();
-		
-		do {
-			list.add(createCompanyObject(compResults));
-		} while (compResults.next());
+		try {
+			PreparedStatement allCompsStmt = conn.prepareStatement(allCompsQuery);
+			ResultSet compResults = allCompsStmt.executeQuery();
+			do {
+				list.add(createCompanyObject(compResults));
+			} while (compResults.next());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		return list;
 	}
@@ -40,28 +42,52 @@ public class CompanyDAOClass implements CompanyDAO {
 	public Company getCompany(int id) {
 		// TODO Auto-generated method stub
 		String compQuery = companySelectClause + idMatchClause;
-		PreparedStatement compStmt = conn.prepareStatement(compQuery);
-		compStmt.setString(1, String.valueOf(id));
+		Company toReturn = null;
 		
-		ResultSet compResult = compStmt.executeQuery();
-		return createCompanyObject(compResult);
+		try {
+			PreparedStatement compStmt = conn.prepareStatement(compQuery);
+			compStmt.setInt(1, id);
+			ResultSet compResult = compStmt.executeQuery();
+			toReturn = createCompanyObject(compResult);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return toReturn;
 	}
 
 	@Override
 	public boolean createCompany(Company c) {
 		// TODO Auto-generated method stub
+		
+		//Gonna have to handle address weirdly
+		
 		return false;
 	}
 
 	@Override
 	public boolean deleteCompany(Company c) {
 		// TODO Auto-generated method stub
+		
+		String deleteQuery = " DELETE FROM company " + idMatchClause;
+		try {
+			PreparedStatement deleteStmt = conn.prepareStatement(deleteQuery);
+			deleteStmt.setInt(1, c.getId());
+			return deleteStmt.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		return false;
+
 	}
 
 	@Override
 	public boolean updateCompany(Company c) {
 		// TODO Auto-generated method stub
+		
+		//String updateQuery = "UPDATE Customers SET ContactName = , City= 'Frankfurt'";
+		
 		return false;
 	}
 
@@ -72,7 +98,8 @@ public class CompanyDAOClass implements CompanyDAO {
 	}
 
 	
-	private Company createCompanyObject(ResultSet rs) {
+	private Company createCompanyObject(ResultSet rs) throws SQLException {
+		
 		int id = rs.getInt("comp_id");
 		String name = rs.getString("comp_name");
 		int budget = rs.getInt("comp_budget");
@@ -84,19 +111,3 @@ public class CompanyDAOClass implements CompanyDAO {
 	
 }
 
-
-
-
-// A simple prepared statement with a null fail-safe.
-public static ResultSet getDatabaseData(String[] userInput, Connection conn, PreparedStatement pstmt) {
-	try {
-		pstmt = conn.prepareStatement("SELECT first_name, last_name, credits FROM student WHERE (credits >= ? AND credits < ?) ORDER BY credits DESC;");
-		pstmt.setString(1, userInput[0]);
-		pstmt.setString(2, userInput[1]);
-		return pstmt.executeQuery();
-		
-	} catch (SQLException e) {
-		e.printStackTrace();
-		return null;
-	}
-}
