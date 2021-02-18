@@ -10,9 +10,9 @@ package com.cognixia.jump.jdbc.ems_extension.team2;
 import java.util.Scanner;
 
 import com.cognixia.jump.jdbc.ems_extension.team2.concrete.CompanyManager;
-import com.cognixia.jump.jdbc.ems_extension.team2model.Company;
-import com.cognixia.jump.jdbc.ems_extension.team2model.Department;
-import com.cognixia.jump.jdbc.ems_extension.team2model.Employee;
+import com.cognixia.jump.jdbc.ems_extension.team2.model.Company;
+import com.cognixia.jump.jdbc.ems_extension.team2.model.Department;
+import com.cognixia.jump.jdbc.ems_extension.team2.model.Employee;
 
 public class EMSRunner {
 	//runner main

@@ -1,16 +1,14 @@
-package com.cognixia.jump.jdbc.ems_extension.team2model;
+package com.cognixia.jump.jdbc.ems_extension.team2.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.cognixia.jump.jdbc.ems_extension.team2.OverBudgetException;
 
-public class Company implements Serializable{
+public class Company {
 
 	private static final int DEFAULT_BUDGET = 1000000;
 	private static final String DEFAULT_NAME = "Default Company Name";
 	private static final String DEFAULT_LOCATION = "123 Sesame Street";
-	private static final long serialVersionUID = 1L;
 	private static int idCounter = 0;
 	
 	private int id;
