@@ -32,7 +32,6 @@ public class Runner {
 		
 		//closing the scanner for security and safety.
 		System.out.println("... Program Terminated");
-		System.out.println(companyId);
 		scanner.close();
 	}
 
@@ -61,23 +60,24 @@ public class Runner {
 			for (Company company : companies ) {
 				System.out.printf("ID: %-2d - Name: %s%n", company.getId(), company.getName());
 			}
-			System.out.print("ID of company you'd like to use: ");
-			return scanner.nextInt();
+			System.out.println("\nID of company you'd like to use: ");
+			return Integer.parseInt(scanner.nextLine());
 		}
 	}
 	
 	
 	private static Company createCompany(Scanner scanner, CompanyDAOClass companyDAO) {
 		//collects update info
-		System.out.println("Please fill out the following fields to update the Employee:");
+		System.out.println("Please fill out the following fields to create a Company:");
 		System.out.println("--What is the Company's name?");
 		String name = scanner.nextLine();
 		System.out.println("--What is the Company's budget?");
 		int budget = Integer.parseInt(scanner.nextLine());
 		Company tempCompany = new Company(name, budget);
+		int tempID = companyDAO.createCompany(tempCompany);
 		
 		//attempts update
-		if (companyDAO.createCompany(tempCompany)) {
+		if (tempID != 0) {
 			System.out.println("Company created successfully!");
 			return tempCompany;
 		} else {
@@ -237,8 +237,8 @@ public class Runner {
 		
 		
 		System.out.println("Select from the following Employee options:");
-		System.out.println("1: List a Current Employee's Info\n" + "2: Update a Current Employee's Info\n" + 
-							"3: Create a New Employee\n" + "4: Remove a Current Employee");
+		System.out.println("1: List ALL current Employees\n" + "2: List an Employee's Full Info\n" + "3: Update a Current Employee's Info\n" + 
+							"4: Create a New Employee\n" + "5: Remove a Current Employee");
 		int userInput = Integer.parseInt(scanner.nextLine());
 		int employeeId, departmentId;
 		System.out.println();
@@ -248,6 +248,18 @@ public class Runner {
 		
 			//gets info on an employee
 			case 1:
+				//asks for employee ID and department ID
+				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+				System.out.println("Printing Employess:");
+				for (Employee employee : employeeDAO.getAllEmployees()) {
+					String employeeName = employee.getFirstName() + " " + employee.getLastName();
+					System.out.printf("ID: %-2d, Name: %-30s%n", employee.getId(), employeeName);
+				}
+				break;
+				
+				
+			//gets info on an employee
+			case 2:
 				//asks for employee ID and department ID
 				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 				System.out.println("What is employee's ID?");
@@ -266,7 +278,7 @@ public class Runner {
 			
 			
 			//updates an employee's info
-			case 2:
+			case 3:
 				//asks for employee ID and department ID
 				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 				System.out.println("What is the employee's ID?");
@@ -304,7 +316,7 @@ public class Runner {
 			
 			
 			//adds an employee
-			case 3:
+			case 4:
 				//ask for inputs on everything.
 				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 				System.out.println("Creating an Employee...");
@@ -325,8 +337,8 @@ public class Runner {
 				
 				//gets newly generated ID if the employee was successfully added
 				tempEmployee = new Employee(departmentId, firstName, lastName, salary, title, phoneNumber, addressId);
-				int newID = tempEmployee.getId();
-				employeeDAO.createEmployee(tempEmployee);
+				int newID = employeeDAO.createEmployee(tempEmployee);
+				
 				
 				//if-else statement on the received int.
 				if (newID == 0) {
@@ -338,11 +350,12 @@ public class Runner {
 			
 			
 			//removing an employee
-			case 4:
+			case 5:
 				//asks for employee ID and department ID
 				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 				System.out.println("What is the employee's ID?");
 				employeeId = Integer.parseInt(scanner.nextLine());
+				tempEmployee = employeeDAO.getEmployee(employeeId);
 
 				//prints out the results of removal process
 				if (employeeDAO.deleteEmployee(tempEmployee)) {
@@ -366,9 +379,9 @@ public class Runner {
 		
 		
 		System.out.println("Select from the following Department options:");
-		System.out.println("1: List a Department's Info & Assigned Employees\n"
-							+ "2: Update a Department\n" +  "3: Create a Department\n"
-							+ "4: Remove a Department");
+		System.out.println("1: List all Departments of Company\n" + "2: List a Department's Info & Assigned Employees\n"
+							+ "3: Update a Department\n" +  "4: Create a Department\n"
+							+ "5: Remove a Department");
 		int userInput = Integer.parseInt(scanner.nextLine());
 		int departmentId;
 		System.out.println();
@@ -376,8 +389,18 @@ public class Runner {
 		switch(userInput) {
 		
 		
-			//gets info on a department, and lists its currently assigned employees
+			//gets all departments
 			case 1:
+				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+				System.out.println("Printing Departments:");
+				for (Department department : departmentDAO.getAllDepartmentsOfCompany(companyId)) {
+					System.out.printf("ID: %-2d, Name: %-30s%n", department.getId(), department.getName());
+				}
+				break;
+		
+		
+			//gets info on a department, and lists its currently assigned employees
+			case 2:
 				//asks for employee ID and department ID
 				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 				System.out.println("What the Department's ID?");
@@ -385,19 +408,19 @@ public class Runner {
 				
 				//prints out found info
 				tempDepartment = departmentDAO.getDepartment(departmentId);
-				
-				if (tempDepartment != null) {
-					System.out.println("Department Found, printing info:\n"
-							+ tempDepartment.listInfo());
-					System.out.println(tempDepartment.listEmployees());
-				} else {
-					System.out.println("Department not found.");
+				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+				System.out.println("... Department Info:");
+				System.out.println(tempDepartment.toString());
+				System.out.println("... Employees:");
+				for (Employee employee : departmentDAO.getDepartmentEmployees(departmentId)) {
+					String employeeName = employee.getFirstName() + " " + employee.getLastName();
+					System.out.printf("ID: %-2d, Name: %-30s%n", employee.getId(), employeeName);
 				}
 				break;
 			
 			
 			//updates an Department's info
-			case 2:
+			case 3:
 				//asks for department ID
 				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 				System.out.println("What is the Department's ID?");
@@ -428,7 +451,7 @@ public class Runner {
 			
 			
 			//creates a Department
-			case 3:
+			case 4:
 				//ask for inputs on everything.
 				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 				System.out.println("Creating a Department...");
@@ -454,7 +477,7 @@ public class Runner {
 			
 			
 			//removes a Department
-			case 4:
+			case 5:
 				//asks for employee ID and department ID
 				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 				System.out.println("What is the Department's ID?");

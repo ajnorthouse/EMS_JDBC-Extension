@@ -45,10 +45,10 @@ public class ConnectionManager {
 		//then the possible exceptions	
 		} catch (IOException e) {
 			System.out.println("There was an IOException:");
-			System.out.println(e.getCause());
+			e.printStackTrace();
 		} catch (SQLException e) {
 			System.out.println("There was an SQLException:");
-			System.out.println(e.getCause());
+			e.printStackTrace();
 		}
 	}
 	

@@ -4,21 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.cognixia.jump.jdbc.ems_extension.team2.ConnectionManager;
 import com.cognixia.jump.jdbc.ems_extension.team2.interfaces.DepartmentDAO;
-import com.cognixia.jump.jdbc.ems_extension.team2.model.Company;
 import com.cognixia.jump.jdbc.ems_extension.team2.model.Department;
 import com.cognixia.jump.jdbc.ems_extension.team2.model.Employee;
 
 public class DepartmentDAOClass implements DepartmentDAO {
 	
 	Connection conn = ConnectionManager.getConnection();
-	private String idMatchClause = " WHERE department.dept_id = ? ";
-	private String deptSelectClause = " SELECT d.* FROM department AS d ";
+	private String idMatchClause = " WHERE dept_id = ?";
+	private String deptSelectClause = " SELECT * FROM department ";
 	
 	@Override
 	public List<Department> getAllDepartments() {
@@ -28,9 +26,9 @@ public class DepartmentDAOClass implements DepartmentDAO {
 		try {
 			PreparedStatement allDeptsStmt = conn.prepareStatement(allDeptsQuery);
 			ResultSet deptResults = allDeptsStmt.executeQuery();
-			do {
+			while (deptResults.next()) {
 				list.add(ObjectCreator.createDepartmentObject(deptResults));
-			} while (deptResults.next());
+			}
 			return list;
 			
 		} catch (SQLException e) {
@@ -49,6 +47,7 @@ public class DepartmentDAOClass implements DepartmentDAO {
 			PreparedStatement deptsStmt = conn.prepareStatement(deptsQuery);
 			deptsStmt.setInt(1, id);
 			ResultSet deptResults = deptsStmt.executeQuery();
+			deptResults.next();
 			dept = ObjectCreator.createDepartmentObject(deptResults);
 			return dept;
 		} catch (SQLException e) {
@@ -111,26 +110,43 @@ public class DepartmentDAOClass implements DepartmentDAO {
 	}
 
 	@Override
-	public List<Employee> getDepartmentEmployees(Department d) {
+	public List<Department> getAllDepartmentsOfCompany(int companyId) {
 		// TODO Auto-generated method stub
-		String emplsQuery = " SELECT e.* FROM employee AS e INNER JOIN department AS d on e.dept_id = d.dept_id " + idMatchClause;
-		List<Employee> list = new ArrayList<Employee>();
+		String deptsQuery = " SELECT * FROM department WHERE comp_id = ?";
+		List<Department> list = new ArrayList<Department>();
 		
 		try {
-			PreparedStatement emplsStmt = conn.prepareStatement(emplsQuery);
-			emplsStmt.setInt(1, d.getId());
-			ResultSet emplResults = emplsStmt.executeQuery();
+			PreparedStatement deptsStmt = conn.prepareStatement(deptsQuery);
+			deptsStmt.setInt(1, companyId);
+			ResultSet deptResults = deptsStmt.executeQuery();
 			
-			do {
-				list.add(ObjectCreator.createEmployeeObject(emplResults));
-			} while (emplResults.next());
+			while (deptResults.next()) {
+				list.add(ObjectCreator.createDepartmentObject(deptResults));
+			}
 			return list;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return list;
 		}
+	}
 
+	public List<Employee> getDepartmentEmployees(int departmentId) {
+		String query = "select * from employee WHERE dept_id = ?";
+		List<Employee> list = new ArrayList<Employee>();
+		try {
+			PreparedStatement allEmplsStmt = conn.prepareStatement(query);
+			allEmplsStmt.setInt(1, departmentId);
+			ResultSet emplResults = allEmplsStmt.executeQuery();
+			while (emplResults.next()) {
+				list.add(ObjectCreator.createEmployeeObject(emplResults));
+			}
+			return list;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return list;
+		}
 	}
 
 }

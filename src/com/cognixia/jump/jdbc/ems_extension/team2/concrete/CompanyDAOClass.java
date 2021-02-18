@@ -10,13 +10,11 @@ import java.util.List;
 import com.cognixia.jump.jdbc.ems_extension.team2.ConnectionManager;
 import com.cognixia.jump.jdbc.ems_extension.team2.interfaces.CompanyDAO;
 import com.cognixia.jump.jdbc.ems_extension.team2.model.Company;
-import com.cognixia.jump.jdbc.ems_extension.team2.model.Department;
 
 public class CompanyDAOClass implements CompanyDAO {
-	
 	Connection conn = ConnectionManager.getConnection();
-	private String idMatchClause = " WHERE company.comp_id = ? ";
-	private String companySelectClause = " SELECT c.*, a.address FROM company AS c INNER JOIN address AS a on c.address_id = a.address_id ";
+	private String idMatchClause = " WHERE comp_id = ?";
+	private String companySelectClause = " SELECT * FROM company";
 	
 	@Override
 	public List<Company> getAllCompanies() {
@@ -27,13 +25,12 @@ public class CompanyDAOClass implements CompanyDAO {
 		try {
 			PreparedStatement allCompsStmt = conn.prepareStatement(allCompsQuery);
 			ResultSet compResults = allCompsStmt.executeQuery();
-			do {
+			while (compResults.next()) {
 				list.add(ObjectCreator.createCompanyObject(compResults));
-			} while (compResults.next());
+			}
 			return list;
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			return list;
 		}
 
@@ -50,6 +47,7 @@ public class CompanyDAOClass implements CompanyDAO {
 			PreparedStatement compStmt = conn.prepareStatement(compQuery);
 			compStmt.setInt(1, id);
 			ResultSet compResult = compStmt.executeQuery();
+			compResult.next();
 			toReturn = ObjectCreator.createCompanyObject(compResult);
 			return toReturn;
 		} catch (SQLException e) {
@@ -61,17 +59,23 @@ public class CompanyDAOClass implements CompanyDAO {
 
 	
 	@Override
-	public boolean createCompany(Company c) {
+	public int createCompany(Company c) {
 		// TODO Auto-generated method stub
-		String createQuery = "INSERT INTO company (comp_name, comp_budget) VALUES( ? , ? )";
+		String createQuery = "INSERT INTO company (comp_name, comp_budget) VALUES (?, ?);";
 		try {
 			PreparedStatement createStmt = conn.prepareStatement(createQuery);
 			createStmt.setString(1, c.getName()); 
-			createStmt.setInt(2, c.getBudget()); 
-			return createStmt.execute();
+			createStmt.setInt(2, c.getBudget());
+			createStmt.execute();
+			createStmt = conn.prepareStatement("SELECT company_id FROM company WHERE comp_name = ? AND com_budget = ?");
+			createStmt.setString(1, c.getName()); 
+			createStmt.setInt(2, c.getBudget());
+			ResultSet rs = createStmt.executeQuery();
+			rs.next();
+			return rs.getInt(0);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return 0;
 		}
 
 	}
@@ -108,29 +112,6 @@ public class CompanyDAOClass implements CompanyDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
-		}
-	}
-
-	
-	@Override
-	public List<Department> getCompanyDepartments(Company c) {
-		// TODO Auto-generated method stub
-		String deptsQuery = " SELECT d.* FROM department AS d INNER JOIN company AS c on d.comp_id = c.comp_id " + idMatchClause;
-		List<Department> list = new ArrayList<Department>();
-		
-		try {
-			PreparedStatement deptsStmt = conn.prepareStatement(deptsQuery);
-			deptsStmt.setInt(1, c.getId());
-			ResultSet deptResults = deptsStmt.executeQuery();
-			
-			do {
-				list.add(ObjectCreator.createDepartmentObject(deptResults));
-			} while (deptResults.next());
-			return list;
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return list;
 		}
 	}
 	
