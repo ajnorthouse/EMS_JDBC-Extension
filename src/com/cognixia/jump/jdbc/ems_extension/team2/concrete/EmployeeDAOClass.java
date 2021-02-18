@@ -9,14 +9,13 @@ import java.util.List;
 
 import com.cognixia.jump.jdbc.ems_extension.team2.ConnectionManager;
 import com.cognixia.jump.jdbc.ems_extension.team2.interfaces.EmployeeDAO;
-import com.cognixia.jump.jdbc.ems_extension.team2.model.Department;
 import com.cognixia.jump.jdbc.ems_extension.team2.model.Employee;
 
 public class EmployeeDAOClass implements EmployeeDAO {
 	
 	Connection conn = ConnectionManager.getConnection();
-	private String idMatchClause = " WHERE employee.emp_id = ? ";
-	private String emplSelectClause = " SELECT e.* FROM employee AS e ";
+	private String idMatchClause = " WHERE emp_id = ?";
+	private String emplSelectClause = " SELECT * FROM employee";
 	
 	@Override
 	public List<Employee> getAllEmployees() {
@@ -26,9 +25,27 @@ public class EmployeeDAOClass implements EmployeeDAO {
 		try {
 			PreparedStatement allEmplsStmt = conn.prepareStatement(allEmplsQuery);
 			ResultSet emplResults = allEmplsStmt.executeQuery();
-			do {
+			while (emplResults.next()) {
 				list.add(ObjectCreator.createEmployeeObject(emplResults));
-			} while (emplResults.next());
+			}
+			return list;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return list;
+		}
+	}
+	
+	public List<Employee> getAllEmployeesOfCompany(int companyId) {
+		String query = "select employee.* from employee, department WHERE employee.dept_id = department.dept_id AND department.comp_id = ?";
+		List<Employee> list = new ArrayList<Employee>();
+		try {
+			PreparedStatement allEmplsStmt = conn.prepareStatement(query);
+			allEmplsStmt.setInt(1, companyId);
+			ResultSet emplResults = allEmplsStmt.executeQuery();
+			while (emplResults.next()) {
+				list.add(ObjectCreator.createEmployeeObject(emplResults));
+			}
 			return list;
 			
 		} catch (SQLException e) {
@@ -46,6 +63,7 @@ public class EmployeeDAOClass implements EmployeeDAO {
 			PreparedStatement emplStmt = conn.prepareStatement(emplQuery);
 			emplStmt.setInt(1, id);
 			ResultSet emplResults = emplStmt.executeQuery();
+			emplResults.next();
 			empl = ObjectCreator.createEmployeeObject(emplResults);
 			return empl;
 		} catch (SQLException e) {
@@ -56,23 +74,37 @@ public class EmployeeDAOClass implements EmployeeDAO {
 	}
 
 	@Override
-	public boolean createEmployee(Employee em) {
+	public int createEmployee(Employee em) {
 		// TODO Auto-generated method stub
 		
 		String createQuery = "INSERT INTO employee (first_name, last_name, salary, job_title, phone_num, address_id, dept_id) VALUES( ? , ? , ? , ? , ? , ? , ? )";
 		try {
 			PreparedStatement createStmt = conn.prepareStatement(createQuery);
 			createStmt.setString(1, em.getFirstName()); 
-			createStmt.setString(2, em.getFirstName());
+			createStmt.setString(2, em.getLastName());
 			createStmt.setInt(3, em.getSalary()); 
 			createStmt.setString(4, em.getJobTitle()); 
 			createStmt.setString(5, em.getPhoneNumber()); 
 			createStmt.setInt(6, em.getAddressId()); 
 			createStmt.setInt(7, em.getDepartmentId()); 
-			return createStmt.execute();
+			createStmt.execute();
+
+			createQuery = "SELECT emp_id FROM employee WHERE first_name = ? AND last_name = ? AND salary = ? AND job_title = ? AND "
+					+ "phone_num = ? AND address_id = ? AND dept_id = ?";
+			createStmt = conn.prepareStatement(createQuery);
+			createStmt.setString(1, em.getFirstName()); 
+			createStmt.setString(2, em.getLastName());
+			createStmt.setInt(3, em.getSalary()); 
+			createStmt.setString(4, em.getJobTitle()); 
+			createStmt.setString(5, em.getPhoneNumber()); 
+			createStmt.setInt(6, em.getAddressId()); 
+			createStmt.setInt(7, em.getDepartmentId()); 
+			ResultSet rs = createStmt.executeQuery();
+			rs.next();
+			return rs.getInt("emp_id");
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return 0;
 		}
 	
 	}
@@ -95,16 +127,17 @@ public class EmployeeDAOClass implements EmployeeDAO {
 	@Override
 	public boolean updateEmployee(Employee em) {
 		// TODO Auto-generated method stub
-		String updateQuery = " UPDATE department SET first_name = ? , last_name = ?, salary = ? , phone_num = ? , job_title = ? , address_id = ? , dept_id = ? " + idMatchClause;
+		String updateQuery = " UPDATE employee SET first_name = ? , last_name = ?, salary = ? , phone_num = ? , job_title = ? , address_id = ? , dept_id = ? " + idMatchClause;
 		try {
 			PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
 			updateStmt.setString(1, em.getFirstName()); 
-			updateStmt.setString(2, em.getFirstName());
+			updateStmt.setString(2, em.getLastName());
 			updateStmt.setInt(3, em.getSalary()); 
 			updateStmt.setString(4, em.getJobTitle()); 
 			updateStmt.setString(5, em.getPhoneNumber()); 
 			updateStmt.setInt(6, em.getAddressId()); 
 			updateStmt.setInt(7, em.getDepartmentId()); 
+			updateStmt.setInt(8, em.getId()); 
 			return updateStmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
