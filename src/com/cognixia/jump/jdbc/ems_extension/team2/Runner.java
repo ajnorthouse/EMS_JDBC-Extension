@@ -146,7 +146,7 @@ public class Runner {
 	private static void addressOptions(Scanner scanner) {
 		//temp variables:
 		AddressDAOClass addressDAO = new AddressDAOClass();
-		int id;
+		int addressId;
 		String street, city, state, zip;
 		Address tempAddress;
 		
@@ -155,7 +155,6 @@ public class Runner {
 		System.out.println("1: List all Addresses\n" + "2: Update an Address\n" + 
 							"3: Create an Address\n" + "4: Remove a Address");
 		int userInput = Integer.parseInt(scanner.nextLine());
-		int addressId;
 		System.out.println();
 		
 		switch(userInput) {
