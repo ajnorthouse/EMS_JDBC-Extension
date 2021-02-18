@@ -3,9 +3,11 @@ package com.cognixia.jump.jdbc.ems_extension.team2;
 import java.util.List;
 import java.util.Scanner;
 
+import com.cognixia.jump.jdbc.ems_extension.team2.concrete.AddressDAOClass;
 import com.cognixia.jump.jdbc.ems_extension.team2.concrete.CompanyDAOClass;
 import com.cognixia.jump.jdbc.ems_extension.team2.concrete.DepartmentDAOClass;
 import com.cognixia.jump.jdbc.ems_extension.team2.concrete.EmployeeDAOClass;
+import com.cognixia.jump.jdbc.ems_extension.team2.model.Address;
 import com.cognixia.jump.jdbc.ems_extension.team2.model.Company;
 import com.cognixia.jump.jdbc.ems_extension.team2.model.Department;
 import com.cognixia.jump.jdbc.ems_extension.team2.model.Employee;
@@ -86,16 +88,15 @@ public class Runner {
 		return null;
 	}
 
-
-
+	
 	private static void userLoop(Scanner scanner, CompanyDAOClass companyDAO, DepartmentDAOClass departmentDAO,
 			EmployeeDAOClass employeeDAO, int companyId, boolean keepProgramRunning) {
 		//while loop that keeps running till the user tells it to stop.
 		do {
 			System.out.println("\n= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =");
 			System.out.println("Which option would you like to choose?");
-			System.out.println("1: Employee\n" + "2: Department\n" + "3: Company\n"
-								+ "4: Terminate Program");
+			System.out.println("1: Employee\n" + "2: Department\n" + "3: Company\n" + "4: Address\n"
+								+ "5: Terminate Program");
 			int userInput = Integer.parseInt(scanner.nextLine());
 			System.out.println();
 			
@@ -117,9 +118,15 @@ public class Runner {
 					System.out.println("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~");
 					companyOptions(scanner, companyDAO, companyId);
 					break;
+					
+				//===Address:
+				case 4:
+					System.out.println("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~");
+					addressOptions(scanner);
+					break;
 						
 				//===Quitting:
-				case 4:
+				case 5:
 					System.out.println("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~");
 					System.out.println("Terminating Program...\n");
 					keepProgramRunning = false;
@@ -136,6 +143,95 @@ public class Runner {
 	
 	
 	// user choices methods
+	private static void addressOptions(Scanner scanner) {
+		//temp variables:
+		AddressDAOClass addressDAO = new AddressDAOClass();
+		int id;
+		String street, city, state, zip;
+		Address tempAddress;
+		
+		
+		System.out.println("Select from the following Address options:");
+		System.out.println("1: List all Addresses\n" + "2: Update an Address\n" + 
+							"3: Create an Address\n" + "4: Remove a Address");
+		int userInput = Integer.parseInt(scanner.nextLine());
+		int addressId;
+		System.out.println();
+		
+		switch(userInput) {
+			//List Addresses
+			case 1:
+				List<Address> addresses = addressDAO.getAllAddresses();
+				for (Address address : addresses) {
+					String fullAddress = address.getStreetAddr() + ", " + address.getCity() + ", " + address.getState() + " " + address.getZipCode();
+					System.out.printf("ID: %-2d - %s%n", address.getId(), fullAddress);
+				}
+				break;
+				
+			//Update Address
+			case 2:
+				//collects update info
+				System.out.println("Please fill out the following fields to update an Address:");
+				System.out.println("--What is the Address Id?");
+				addressId = Integer.parseInt(scanner.nextLine());
+				tempAddress = addressDAO.getAddress(addressId);
+				System.out.println("--What is the Street Address (no city, state, or zip)?");
+				tempAddress.setStreetAddr(scanner.nextLine());
+				System.out.println("--What is the City?");
+				tempAddress.setCity(scanner.nextLine());
+				System.out.println("--What is the State?");
+				tempAddress.setState(scanner.nextLine());
+				System.out.println("--What is the Zip Code?");
+				tempAddress.setZipCode(scanner.nextLine());
+				if (addressDAO.updateAddress(tempAddress)) {
+					System.out.println("Address successfully updated!");
+				} else {
+					System.out.println("Failure. :<");
+				}
+				break;
+				
+			//Create Address
+			case 3:
+				//collects update info
+				System.out.println("Please fill out the following fields to create an Address:");
+				System.out.println("--What is the Street Address (no city, state, or zip)?");
+				street = scanner.nextLine();
+				System.out.println("--What is the City?");
+				city = scanner.nextLine();
+				System.out.println("--What is the State?");
+				state = scanner.nextLine();
+				System.out.println("--What is the Zip Code?");
+				zip = scanner.nextLine();
+				tempAddress = new Address(street, city, state, zip);
+				if (addressDAO.createAddress(tempAddress)) {
+					System.out.println("Address successfully added!");
+				} else {
+					System.out.println("Failure. :<");
+				}
+				break;
+				
+			//Remove Address
+			case 4:
+				System.out.println("Please fill out the following fields to remove an Address:");
+				System.out.println("--What is the Address ID?");
+				addressId = Integer.parseInt(scanner.nextLine());
+				
+				tempAddress = addressDAO.getAddress(addressId);
+				if (addressDAO.deleteAddress(tempAddress)) {
+					System.out.println("Successfully deleted address!");
+				} else {
+					System.out.println("Failure. :<");
+				}
+				break;
+				
+			//default
+			default:
+				System.out.println("The input wasn't recognized.");
+				break;
+		}
+		
+	}
+
 	private static void employeeOptions(Scanner scanner, EmployeeDAOClass employeeDAO) {
 		//temp variables:
 		Employee tempEmployee = null;
