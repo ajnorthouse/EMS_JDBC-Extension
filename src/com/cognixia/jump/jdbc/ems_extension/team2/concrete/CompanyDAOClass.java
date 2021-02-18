@@ -67,7 +67,7 @@ public class CompanyDAOClass implements CompanyDAO {
 			createStmt.setString(1, c.getName()); 
 			createStmt.setInt(2, c.getBudget());
 			createStmt.execute();
-			createStmt = conn.prepareStatement("SELECT company_id FROM company WHERE comp_name = ? AND com_budget = ?");
+			createStmt = conn.prepareStatement("SELECT comp_id FROM company WHERE comp_name = ? AND com_budget = ?");
 			createStmt.setString(1, c.getName()); 
 			createStmt.setInt(2, c.getBudget());
 			ResultSet rs = createStmt.executeQuery();
