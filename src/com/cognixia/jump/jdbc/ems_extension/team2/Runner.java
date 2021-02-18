@@ -31,7 +31,8 @@ public class Runner {
 	}
 	
 	
-	// setup, main loop, and shutdown methods
+	
+	// startup, main user loop, and shutdown methods
 	private static int startUp(Scanner scanner) {
 		System.out.println("...  Loading database connection");
 		CompanyDAOClass companyDAO = new CompanyDAOClass();
@@ -58,16 +59,23 @@ public class Runner {
 		}
 	}
 	
+	
 	private static void userLoop() {
 		
 	}
+	
 	
 	private static void shutdown() {
 		
 	}
 
 	
+	
 	// user choices methods
+	private void choiceCompany(Scanner scanner) {
+		//
+	}
+	
 	
 	
 	// helper methods

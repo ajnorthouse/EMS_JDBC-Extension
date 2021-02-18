@@ -32,9 +32,11 @@ public class CompanyDAOClass implements CompanyDAO {
 			} while (compResults.next());
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			return list;
 		}
 		
-		return list;
+
 	}
 
 	
@@ -51,9 +53,11 @@ public class CompanyDAOClass implements CompanyDAO {
 			toReturn = createCompanyObject(compResult);
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			return toReturn;
 		}
 
-		return toReturn;
+
 	}
 
 	@Override
@@ -76,9 +80,11 @@ public class CompanyDAOClass implements CompanyDAO {
 			return deleteStmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			return false;
 		}
 		
-		return false;
+
 
 	}
 
