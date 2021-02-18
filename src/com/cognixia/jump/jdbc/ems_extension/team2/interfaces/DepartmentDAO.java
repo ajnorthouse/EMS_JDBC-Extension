@@ -8,7 +8,7 @@ import com.cognixia.jump.jdbc.ems_extension.team2.model.Employee;
 public interface DepartmentDAO {
 	public List<Department> getAllDepartments();
 	public Department getDepartment(int id);
-	public boolean createDepartment(Department d);
+	public int createDepartment(Department d);
 	public boolean deleteDepartment(Department d);
 	public boolean updateDepartment(Department d);
 	public List<Department> getAllDepartmentsOfCompany(int departmentId);

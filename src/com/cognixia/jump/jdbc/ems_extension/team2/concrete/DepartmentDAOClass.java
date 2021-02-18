@@ -57,20 +57,29 @@ public class DepartmentDAOClass implements DepartmentDAO {
 	}
 
 	@Override
-	public boolean createDepartment(Department d) {
+	public int createDepartment(Department d) {
 		// TODO Auto-generated method stub
 		
 		String createQuery = "INSERT INTO department (dept_name, dept_phone_num, dept_budget, comp_id) VALUES( ? , ? , ? , ? )";
+		String selectQuery = "SELECT dept_id FROM department WHERE dept_name = ? AND dept_phone_num = ? AND dept_budget = ? AND comp_id = ?";
 		try {
 			PreparedStatement createStmt = conn.prepareStatement(createQuery);
 			createStmt.setString(1, d.getName()); 
 			createStmt.setString(2, d.getPhoneNumber()); 
 			createStmt.setInt(3, d.getBudget()); 
 			createStmt.setInt(4, d.getCompanyId()); 
-			return createStmt.execute();
+			
+			PreparedStatement queryStmt = conn.prepareStatement(selectQuery);
+			queryStmt.setString(1, d.getName()); 
+			queryStmt.setString(2, d.getPhoneNumber()); 
+			queryStmt.setInt(3, d.getBudget()); 
+			queryStmt.setInt(4, d.getCompanyId());
+			ResultSet rs = queryStmt.executeQuery();
+			rs.next();
+			return rs.getInt("dept_id");
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return 0;
 		}
 		
 	}
