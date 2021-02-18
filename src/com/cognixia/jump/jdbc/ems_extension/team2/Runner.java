@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.cognixia.jump.jdbc.ems_extension.team2.concrete.CompanyDAOClass;
-import com.cognixia.jump.jdbc.ems_extension.team2.concrete.CompanyManager;
 import com.cognixia.jump.jdbc.ems_extension.team2.concrete.DepartmentDAOClass;
 import com.cognixia.jump.jdbc.ems_extension.team2.concrete.EmployeeDAOClass;
 import com.cognixia.jump.jdbc.ems_extension.team2.model.Company;
@@ -29,9 +28,6 @@ public class Runner {
 		//holds the main logic
 		userLoop(scanner, companyDAO, departmentDAO, employeeDAO, companyId, keepProgramRunning);
 		
-		//final set of logic before the program terminates
-		//shutDown(scanner, fileHandler, company);
-		
 		//closing the scanner for security and safety.
 		System.out.println("... Program Terminated");
 		System.out.println(companyId);
@@ -52,7 +48,7 @@ public class Runner {
 			System.out.println("... Creating company from user input:");
 			
 			//reuses method for creating company
-			Company tempCompany = createCompany(scanner);
+			Company tempCompany = createCompany(scanner, companyDAO);
 			companyDAO.createCompany(tempCompany);
 			return tempCompany.getId();
 			
@@ -69,6 +65,29 @@ public class Runner {
 	}
 	
 	
+	private static Company createCompany(Scanner scanner, CompanyDAOClass companyDAO) {
+		//collects update info
+		System.out.println("Please fill out the following fields to update the Employee:");
+		System.out.println("--What is the Company's name?");
+		String name = scanner.nextLine();
+		System.out.println("--What is the Company's budget?");
+		int budget = Integer.parseInt(scanner.nextLine());
+		Company tempCompany = new Company(name, budget);
+		
+		//attempts update
+		if (companyDAO.createCompany(tempCompany)) {
+			System.out.println("Company created successfully!");
+			return tempCompany;
+		} else {
+			System.out.print("Fatal Error.");
+			System.exit(0);
+		}
+		
+		return null;
+	}
+
+
+
 	private static void userLoop(Scanner scanner, CompanyDAOClass companyDAO, DepartmentDAOClass departmentDAO,
 			EmployeeDAOClass employeeDAO, int companyId, boolean keepProgramRunning) {
 		//while loop that keeps running till the user tells it to stop.
@@ -76,7 +95,7 @@ public class Runner {
 			System.out.println("\n= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =");
 			System.out.println("Which option would you like to choose?");
 			System.out.println("1: Employee\n" + "2: Department\n" + "3: Company\n"
-								+ "4: Open Saved Info\n" + "5: Save Current Info\n" + "6: Terminate Program");
+								+ "4: Terminate Program");
 			int userInput = Integer.parseInt(scanner.nextLine());
 			System.out.println();
 			
@@ -99,18 +118,8 @@ public class Runner {
 					companyOptions(scanner, companyDAO, companyId);
 					break;
 						
-				//===File Options:
-				case 4:
-					System.out.println("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~");
-					company = openSavedInfo(scanner, company, fileHandler);
-					break;
-				case 5:
-					System.out.println("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~");
-					saveCurrentInfo(scanner, company, fileHandler);
-					break;
-						
 				//===Quitting:
-				case 6:
+				case 4:
 					System.out.println("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~");
 					System.out.println("Terminating Program...\n");
 					keepProgramRunning = false;
@@ -123,24 +132,6 @@ public class Runner {
 				}
 			} while (keepProgramRunning);
 		}
-
-	
-	private static void shutDown(Scanner scanner, FileHandler fileHandler, CompanyManager company) {
-		System.out.println("Would you like to save your current data and "
-				+ "overwrite any existing data before closing the program? [y/n]");
-		String userInput = scanner.nextLine().toLowerCase();
-		
-		if (userInput.equals("y")) {
-			System.out.println("Saving current data...");
-			fileHandler.writeToFile(company);
-			System.out.println("Successfully saved current data!");
-		} else if (userInput.equals("n")) {
-			System.out.println("Chose to NOT save data.");
-		} else {
-			System.out.println("Unrecognized input, retrying operation..");
-			shutDown(scanner, fileHandler, company);
-		}
-	}
 
 	
 	
@@ -392,7 +383,7 @@ public class Runner {
 	
 	private static void companyOptions(Scanner scanner, CompanyDAOClass companyDAO, int companyId) {
 		//temp variables:
-		Company tempCompany = null;
+		Company tempCompany = companyDAO.getCompany(companyId);
 		
 		
 		System.out.println("Select from the following Company options:");
@@ -406,8 +397,7 @@ public class Runner {
 			case 1:
 				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 				//prints out found info
-				tempCompany = companyDAO.getCompany();
-				System.out.println("Department Found, printing info:\n"
+				System.out.println("Printing info:\n"
 						+ tempCompany.listInfo());
 				System.out.println(tempCompany.listDepartments());
 				break;
@@ -417,26 +407,23 @@ public class Runner {
 			case 2:
 				//asks for fields to be updated
 				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-				System.out.println("What is the Department's ID?");
-				tempCompany = companyDAO.getCompany();
 				
 				//prints out found info
 				if (tempCompany != null) {
 					//prints out current info
-					System.out.println("Department Found, printing current info:\n"
+					System.out.println("Printing current info:\n"
 							+ tempCompany.listInfo());
 					
 					//collects update info
 					System.out.println("Please fill out the following fields to update the Employee:");
 					System.out.println("--What is the Company's name?");
-					String name = scanner.nextLine();
+					tempCompany.setName(scanner.nextLine());
 					System.out.println("--What is the Company's budget?");
-					int budget = Integer.parseInt(scanner.nextLine());
-					System.out.println("--What is the Company's location?");
-					String location = scanner.nextLine();
+					tempCompany.setBudget(Integer.parseInt(scanner.nextLine()));
+					
 					
 					//attempts update
-					companyDAO.editCompany(name, budget, location);
+					companyDAO.updateCompany(tempCompany);
 					System.out.println("Company info updated successfully!");
 				} else {
 					System.out.println("Company not found.");
@@ -448,13 +435,15 @@ public class Runner {
 			case 3:
 				//asks confirmation before doing it.
 				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-				System.out.println("Are you sure you want to reset all the entered data? [y/n]");
+				System.out.println("Are you sure you want to detele all the entered company data? [y/n]");
 				String answer = scanner.next().toLowerCase();
 
 				//prints out the results of removal process
 				if (answer.equals("y")) {
-					System.out.println("Company reset.");
-					companyDAO.resetCompany();
+					System.out.println("Company deleted.");
+					companyDAO.deleteCompany(tempCompany);
+					System.out.println("Exiting Program.");
+					System.exit(0);
 				} else {
 					System.out.println("There was an issue resetting the company.");
 				}
@@ -466,63 +455,5 @@ public class Runner {
 				System.out.println("The input wasn't recognized.");
 				break;
 		}
-	}
-	
-	/**
-	 * Reads data from a file and overwrites the current CompanyManager object
-	 * @param scanner
-	 * @param company
-	 * @param fileHandler
-	 * @return loaded CompanyManager data
-	 */
-	private static CompanyManager openSavedInfo(Scanner scanner, CompanyManager company, FileHandler fileHandler) {
-		System.out.println("Wouldy you load saved data and overwrite any unsaved data? [y/n]");
-		String userInput = scanner.next().toLowerCase();
-		
-		if (userInput.equals("y")) {
-			System.out.println("Loading data from file...");
-			company = (CompanyManager) fileHandler.readFromFile();
-			System.out.println("Successfully saved current data!");
-			scanner.nextLine();
-			return company;
-		} else if (userInput.equals("n")) {
-			System.out.println("Returning to main menu..");
-			scanner.nextLine();
-			return company;
-		} else {
-			System.out.println("Unrecognized input, returning to main menu..");
-			scanner.nextLine();
-			return company;
-		}
-	}
-	
-	/**
-	 * Handles saving the current CompanyManager object to a file.
-	 * @param scanner
-	 * @param company
-	 * @param fileHandler
-	 */
-	private static void saveCurrentInfo(Scanner scanner, CompanyManager company, FileHandler fileHandler) {
-		System.out.println("Wouldy you like to save your current data and overwrite any existing data? [y/n]");
-		String userInput = scanner.next().toLowerCase();
-		
-		if (userInput.equals("y")) {
-			System.out.println("Saving current data...");
-			fileHandler.writeToFile(company);
-			System.out.println("Successfully saved current data!");
-			scanner.nextLine();
-		} else if (userInput.equals("n")) {
-			System.out.println("Returning to main menu..");
-			scanner.nextLine();
-		} else {
-			System.out.println("Unrecognized input, returning to main menu..");
-			scanner.nextLine();
-		}
-	}
-	
-	
-	// helper methods
-	private static Company createCompany(Scanner scanner) {
-		return null;
 	}
 }
