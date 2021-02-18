@@ -12,10 +12,12 @@ public class Employee {
 	
 	//object variables
 	private int id;
+	private int departmentId;
 	private String firstName, lastName;
 	private int salary;
 	private String jobTitle;
 	private String phoneNumber;
+	private int addressId;
 	
 	
 	//constructors
@@ -164,9 +166,39 @@ public class Employee {
 		this.phoneNumber = phoneNumber;
 	}
 
+	/**
+	 * @return	the departmentId
+	 */
+	public int getDepartmentId() {
+		return departmentId;
+	}
+
+	/**
+	 * @return	the addressId
+	 */
+	public int getAddressId() {
+		return addressId;
+	}
+
+	/**
+	 * @param departmentId the departmentId to set
+	 */
+	public void setDepartmentId(int departmentId) {
+		this.departmentId = departmentId;
+	}
+
+	/**
+	 * @param addressId the addressId to set
+	 */
+	public void setAddressId(int addressId) {
+		this.addressId = addressId;
+	}
+
 	@Override
 	public String toString() {
-		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", salary=" + salary
-				+ ", jobTitle=" + jobTitle + ", phoneNumber=" + phoneNumber + "]";
+		return "Employee [id=" + id + ", departmentId=" + departmentId + ", firstName=" + firstName + ", lastName="
+				+ lastName + ", salary=" + salary + ", jobTitle=" + jobTitle + ", phoneNumber=" + phoneNumber
+				+ ", addressId=" + addressId + "]";
 	}
+
 }
