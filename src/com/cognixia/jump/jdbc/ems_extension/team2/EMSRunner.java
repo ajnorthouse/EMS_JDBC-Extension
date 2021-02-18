@@ -9,27 +9,33 @@ package com.cognixia.jump.jdbc.ems_extension.team2;
  */
 import java.util.Scanner;
 
+import com.cognixia.jump.jdbc.ems_extension.team2.concrete.CompanyDAOClass;
 import com.cognixia.jump.jdbc.ems_extension.team2.concrete.CompanyManager;
+import com.cognixia.jump.jdbc.ems_extension.team2.concrete.DepartmentDAOClass;
+import com.cognixia.jump.jdbc.ems_extension.team2.concrete.EmployeeDAOClass;
 import com.cognixia.jump.jdbc.ems_extension.team2.model.Company;
 import com.cognixia.jump.jdbc.ems_extension.team2.model.Department;
 import com.cognixia.jump.jdbc.ems_extension.team2.model.Employee;
 
+import java.util.List;
+
 public class EMSRunner {
+	
 	//runner main
 	public static void main(String[] args) {
 		//this creates the needed files for everything to work
 		Scanner scanner = new Scanner(System.in);
 		boolean keepProgramRunning = true;
-		FileHandler fileHandler = FileHandler.getInstance();
+		int companyId;
 		
-		//first method that creates a CompanyManager object necessary for the rest of the program, as well as the necessary files.
-		CompanyManager company = startUp(scanner, fileHandler);
+		//first method that polls the database for any existing companies.
+		companyId = startUp(scanner);
 		
 		//holds the main logic
-		mainLoop(scanner, fileHandler, company, keepProgramRunning);
+		//mainLoop(scanner, fileHandler, company, keepProgramRunning);
 		
 		//final set of logic before the program terminates
-		shutDown(scanner, fileHandler, company);
+		//shutDown(scanner, fileHandler, company);
 		
 		//closing the scanner for security and safety.
 		System.out.println("Program Terminated.");
@@ -44,26 +50,31 @@ public class EMSRunner {
 	 * @param fileHandler
 	 * @param company
 	 */
-	private static CompanyManager startUp(Scanner scanner, FileHandler fileHandler) {
-		System.out.println("Would you load saved data? [y/n]");
-		String userInput = scanner.nextLine().toLowerCase();
+	private static int startUp(Scanner scanner) {
+		System.out.println("...  Loading database connection");
+		CompanyDAOClass companyDAO = new CompanyDAOClass();
+		List<Company> companies = companyDAO.getAllCompanies();
 		
-		if (userInput.equals("y")) {
-			System.out.println("Loading data from file...");
-			CompanyManager tempCompany = (CompanyManager) fileHandler.readFromFile();
+		//check database for any existing companies
+		if (companies.isEmpty()) {
+			//if no companies, creates one with user
+			System.out.println("... No created companies were detected");
+			System.out.println("... Creating company from user input:");
 			
-			if (tempCompany == null) {
-				System.out.println("Error reading saved data! Creating new files and a default Company object...");
-				fileHandler.createFiles();
-				return new CompanyManager();
-			}
-			return tempCompany;
-		} else if (userInput.equals("n")) {
-			System.out.println("Creating a company with the default values...");
-			return new CompanyManager();
+//			reuses method for creating company
+//			Company tempCompany = createCompany(scanner);
+//			companyDAO.createCompany(tempCompany);
+//			return tempCompany.getId();
+			System.out.println("Nice");
+			return 0;
 		} else {
-			System.out.println("Unrecognized input, creating a company with the default values..");
-			return new CompanyManager();
+			//if one exists, ask user what company they'd like to work with
+			System.out.println("... Found " + companies.size() + " Companies: ");
+			for (Company company : companies ) {
+				System.out.printf("ID: %-2d - Name: %s%n");
+			}
+			System.out.print("ID of company you'd like to use: ");
+			return scanner.nextInt();
 		}
 	}
 	
