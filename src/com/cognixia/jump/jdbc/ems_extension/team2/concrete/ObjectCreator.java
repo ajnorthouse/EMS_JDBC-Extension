@@ -27,8 +27,9 @@ public class ObjectCreator {
 		String name = rs.getString("dept_name");
 		String phoneNum = rs.getString("dept_phone_num");
 		int budget = rs.getInt("dept_budget");
+		int compId = rs.getInt("comp_id");
 		
-		Department toReturn = new Department(name, phoneNum, budget);
+		Department toReturn = new Department(name, phoneNum, budget, compId);
 		toReturn.setId(id);
 		
 		return toReturn;
@@ -45,10 +46,8 @@ public class ObjectCreator {
 		String phoneNum = rs.getString("phone_num");
 		int salary = rs.getInt("salary");
 		
-		Employee toReturn = new Employee(firstName, lastName, salary, jobTitle, phoneNum);
+		Employee toReturn = new Employee(deptId, firstName, lastName, salary, jobTitle, phoneNum, addrId);
 		toReturn.setId(id);
-		toReturn.setAddressId(addrId);
-		toReturn.setDepartmentId(deptId);
 		
 		return toReturn;
 	}
