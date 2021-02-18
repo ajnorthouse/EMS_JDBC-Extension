@@ -28,7 +28,7 @@ public class CompanyDAOClass implements CompanyDAO {
 			PreparedStatement allCompsStmt = conn.prepareStatement(allCompsQuery);
 			ResultSet compResults = allCompsStmt.executeQuery();
 			do {
-				list.add(createCompanyObject(compResults));
+				list.add(ObjectCreator.createCompanyObject(compResults));
 			} while (compResults.next());
 			return list;
 			
@@ -36,7 +36,6 @@ public class CompanyDAOClass implements CompanyDAO {
 			e.printStackTrace();
 			return list;
 		}
-		
 
 	}
 
@@ -51,7 +50,7 @@ public class CompanyDAOClass implements CompanyDAO {
 			PreparedStatement compStmt = conn.prepareStatement(compQuery);
 			compStmt.setInt(1, id);
 			ResultSet compResult = compStmt.executeQuery();
-			toReturn = createCompanyObject(compResult);
+			toReturn = ObjectCreator.createCompanyObject(compResult);
 			return toReturn;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -60,6 +59,7 @@ public class CompanyDAOClass implements CompanyDAO {
 		
 	}
 
+	
 	@Override
 	public boolean createCompany(Company c) {
 		// TODO Auto-generated method stub
@@ -76,6 +76,7 @@ public class CompanyDAOClass implements CompanyDAO {
 
 	}
 
+	
 	@Override
 	public boolean deleteCompany(Company c) {
 		// TODO Auto-generated method stub
@@ -91,6 +92,7 @@ public class CompanyDAOClass implements CompanyDAO {
 		}
 
 	}
+	
 
 	@Override
 	public boolean updateCompany(Company c) {
@@ -109,25 +111,27 @@ public class CompanyDAOClass implements CompanyDAO {
 		}
 	}
 
+	
 	@Override
 	public List<Department> getCompanyDepartments(Company c) {
 		// TODO Auto-generated method stub
 		String deptsQuery = " SELECT d.* FROM department AS d INNER JOIN company AS c on d.comp_id = c.comp_id " + idMatchClause;
 		List<Department> list = new ArrayList<Department>();
 		
-		
-		return null;
-	}
-
-	
-	private Company createCompanyObject(ResultSet rs) throws SQLException {
-		
-		int id = rs.getInt("comp_id");
-		String name = rs.getString("comp_name");
-		int budget = rs.getInt("comp_budget");
-		Company toReturn = new Company(name, budget);
-		toReturn.setId(id);
-		return toReturn;
+		try {
+			PreparedStatement deptsStmt = conn.prepareStatement(deptsQuery);
+			deptsStmt.setInt(1, c.getId());
+			ResultSet deptResults = deptsStmt.executeQuery();
+			
+			do {
+				list.add(ObjectCreator.createDepartmentObject(deptResults));
+			} while (deptResults.next());
+			return list;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return list;
+		}
 	}
 	
 }
