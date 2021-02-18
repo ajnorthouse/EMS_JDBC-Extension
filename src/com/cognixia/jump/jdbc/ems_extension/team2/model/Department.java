@@ -16,17 +16,19 @@ public class Department
 	private String phoneNumber;
 	private int budget;
 	private ArrayList<Employee> employee;
-	public Department(String name, String phoneNumber, int budget, ArrayList<Employee> employee) {
+	private int companyId;
+	public Department(String name, String phoneNumber, int budget, ArrayList<Employee> employee, int companyId) {
 		super();
 		this.id = generateNewId();
 		this.name = name;
 		this.budget = budget;
 		this.phoneNumber = phoneNumber;
 		this.employee = employee;
+		this.companyId = companyId;
 	}
 
 	//Constructor
-	public Department(String name, String phoneNumber, int budget)
+	public Department(String name, String phoneNumber, int budget, int companyId)
 	{
 		super();
 		this.id = generateNewId();
@@ -34,6 +36,7 @@ public class Department
 		this.employee = new ArrayList<Employee>();
 		this.phoneNumber = phoneNumber;
 		this.budget = budget;
+		this.companyId = companyId;
 	}
 	
 	
@@ -124,9 +127,23 @@ public class Department
 	public void setEmployee(ArrayList<Employee> employee) {
 		this.employee = employee;
 	}
+	/**
+	 * @return	the companyId
+	 */
+	public int getCompanyId() {
+		return companyId;
+	}
+
+	/**
+	 * @param companyId the companyId to set
+	 */
+	public void setCompanyId(int companyId) {
+		this.companyId = companyId;
+	}
+
 	@Override
 	public String toString() {
-		return "Department [id = " + id + ", name = " + name + ", phoneNumber = " + phoneNumber + ", budget = " + budget
-				+ ", employee = " + employee + "]";
+		return "Department [id=" + id + ", name=" + name + ", phoneNumber=" + phoneNumber + ", budget=" + budget
+				+ ", employee=" + employee + ", companyId=" + companyId + "]";
 	}
 }
