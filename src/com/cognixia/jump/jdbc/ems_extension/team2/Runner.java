@@ -48,8 +48,10 @@ public class Runner {
 			Company tempCompany = createCompany(scanner);
 			companyDAO.createCompany(tempCompany);
 			return tempCompany.getId();
+			
+		//if a company exists, ask user what company they'd like to use
 		} else {
-			//if one exists, ask user what company they'd like to work with
+			
 			System.out.println("... Found " + companies.size() + " Companies: ");
 			for (Company company : companies ) {
 				System.out.printf("ID: %-2d - Name: %s%n", company.getId(), company.getName());
@@ -72,7 +74,7 @@ public class Runner {
 	
 	
 	// user choices methods
-	private void choiceCompany(Scanner scanner) {
+	private static void choiceCompany(Scanner scanner) {
 		//
 	}
 	
