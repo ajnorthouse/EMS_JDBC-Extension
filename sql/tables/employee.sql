@@ -1,4 +1,4 @@
-#Employee table
+#employee table
 CREATE TABLE employee
 (
 	emp_id INT PRIMARY KEY UNIQUE AUTO_INCREMENT,
@@ -8,7 +8,9 @@ CREATE TABLE employee
     job_title VARCHAR(50) NOT NULL,
     phone_num VARCHAR(14),
     address_id INT NOT NULL,
-    FOREIGN KEY (address_id) REFERENCES address(address_id),
+    FOREIGN KEY (address_id) REFERENCES address(address_id)
+    ON DELETE CASCADE,
     dept_id INT NOT NULL,
     FOREIGN KEY (dept_id) REFERENCES department(dept_id)
+    ON DELETE CASCADE
 );
