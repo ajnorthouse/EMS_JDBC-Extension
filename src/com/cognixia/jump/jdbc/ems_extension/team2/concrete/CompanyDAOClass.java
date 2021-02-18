@@ -98,7 +98,7 @@ public class CompanyDAOClass implements CompanyDAO {
 	public boolean updateCompany(Company c) {
 		// TODO Auto-generated method stub
 		
-		String updateQuery = " UPDATE company SET comp_name = ? , City = ? " + idMatchClause;
+		String updateQuery = " UPDATE company SET comp_name = ? , budget = ? " + idMatchClause;
 		try {
 			PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
 			updateStmt.setString(1, c.getName());
