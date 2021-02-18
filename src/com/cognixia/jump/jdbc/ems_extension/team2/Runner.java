@@ -55,13 +55,25 @@ public class Runner {
 			
 		//if a company exists, ask user what company they'd like to use
 		} else {
-			
+			int idCounter = 1;
 			System.out.println("... Found " + companies.size() + " Companies: ");
 			for (Company company : companies ) {
 				System.out.printf("ID: %-2d - Name: %s%n", company.getId(), company.getName());
+				idCounter++;
 			}
+			System.out.printf("ID: %-2d - Name: %s%n", idCounter, "[Create a New Company]");
 			System.out.println("\nID of company you'd like to use: ");
-			return Integer.parseInt(scanner.nextLine());
+			int userChoice = Integer.parseInt(scanner.nextLine());
+			
+			//checks if user would like to make new company:
+			if (userChoice == idCounter) {
+				System.out.println("... Creating company from user input:");
+				Company tempCompany = createCompany(scanner, companyDAO);
+				companyDAO.createCompany(tempCompany);
+				return tempCompany.getId();
+			} else {
+				return userChoice;
+			}
 		}
 	}
 	
@@ -463,9 +475,7 @@ public class Runner {
 				int budget = Integer.parseInt(scanner.nextLine());
 				
 				//gets newly generated ID if the employee was successfully added
-				tempDepartment = new Department(name, phoneNumber, budget, companyId);
-				departmentDAO.createDepartment(tempDepartment);
-				int newId = tempDepartment.getId();
+				int newId = departmentDAO.createDepartment(new Department(name, phoneNumber, budget, companyId));
 				
 				//if-else statement on the received int.
 				if (newId == 0) {
