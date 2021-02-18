@@ -30,7 +30,7 @@ public class Runner {
 		scanner.close();
 	}
 	
-	private static int startUp(Scanner scanner) {
+	public static int startUp(Scanner scanner) {
 		System.out.println("...  Loading database connection");
 		CompanyDAOClass companyDAO = new CompanyDAOClass();
 		List<Company> companies = companyDAO.getAllCompanies();
