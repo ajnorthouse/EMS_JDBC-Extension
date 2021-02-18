@@ -1,15 +1,13 @@
 package com.cognixia.jump.jdbc.ems_extension.team2.model;
 
-import java.io.Serializable;
 /**
  * Employee class for use in the ESM project.
  * @author Alexandre Northouse
  *
  */
-public class Employee implements Serializable {
+public class Employee {
 	
 	//static variables
-	private static final long serialVersionUID = 1L;
 	private static int idCounter = 0;
 	
 	//object variables
@@ -73,12 +71,6 @@ public class Employee implements Serializable {
 	
 	
 	//getters and setters
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 
 	/**
 	 * @return the idCounter

@@ -1,16 +1,14 @@
 package com.cognixia.jump.jdbc.ems_extension.team2.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 /***
  * 
  * @author Raymund Palafox
  *
  */
-public class Department implements Serializable
+public class Department
 {
 	//Static Variables
-	private static final long serialVersionUID = 1L;
 	private static int idCounter = 0;
 	//object variables
 	private int id;
@@ -98,9 +96,6 @@ public class Department implements Serializable
 		}
 		
 		return null;
-	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 	public int getId() {
 		return id;
