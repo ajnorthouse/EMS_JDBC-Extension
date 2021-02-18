@@ -1,0 +1,5 @@
+CREATE TABLE address
+(
+	address_id INT PRIMARY KEY UNIQUE AUTO_INCREMENT,
+    address VARCHAR(255) NOT NULL
+);
