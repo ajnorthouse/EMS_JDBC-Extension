@@ -30,9 +30,10 @@ public class CompanyDAOClass implements CompanyDAO {
 			do {
 				list.add(createCompanyObject(compResults));
 			} while (compResults.next());
+			return list;
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
 			return list;
 		}
 		
@@ -51,13 +52,12 @@ public class CompanyDAOClass implements CompanyDAO {
 			compStmt.setInt(1, id);
 			ResultSet compResult = compStmt.executeQuery();
 			toReturn = createCompanyObject(compResult);
+			return toReturn;
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
 			return toReturn;
 		}
-
-
+		
 	}
 
 	@Override
@@ -80,11 +80,8 @@ public class CompanyDAOClass implements CompanyDAO {
 			return deleteStmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
 			return false;
 		}
-		
-
 
 	}
 
@@ -110,7 +107,7 @@ public class CompanyDAOClass implements CompanyDAO {
 		String name = rs.getString("comp_name");
 		int budget = rs.getInt("comp_budget");
 		String address = rs.getString("address");
-		Company toReturn = new Company(name, budget, address);
+		Company toReturn = new Company(name, budget);
 		toReturn.setId(id);
 		return toReturn;
 	}

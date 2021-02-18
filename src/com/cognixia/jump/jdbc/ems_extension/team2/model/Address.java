@@ -2,18 +2,20 @@ package com.cognixia.jump.jdbc.ems_extension.team2.model;
 
 public class Address {
 
+	private static final String DEFAULT_STREET = "XXX";
+	private static final String DEFAULT_CITY = "XXX";
+	private static final String DEFAULT_STATE = "XX";
+	private static final String DEFAULT_ZIP = "XXXXX";
+	
 	private int id;
 	private String streetAddr;
 	private String city;
-	private char[] state;
+	private String state;
 	private String zipCode;
 	
 	private static int idCounter = 0;
 	
-	
-	
-	
-	public Address(int id, String streetAddr, String city, char[] state, String zipCode) {
+	public Address(int id, String streetAddr, String city, String state, String zipCode) {
 		super();
 		this.id = id;
 		this.streetAddr = streetAddr;
@@ -22,13 +24,17 @@ public class Address {
 		this.zipCode = zipCode;
 	}
 	
-	public Address(String streetAddr, String city, char[] state, String zipCode) {
+	public Address(String streetAddr, String city, String state, String zipCode) {
 		super();
 		this.id = generateNewId();
 		this.streetAddr = streetAddr;
 		this.city = city;
 		this.state = state;
 		this.zipCode = zipCode;
+	}
+	
+	public Address() {
+		
 	}
 	
 	
@@ -50,10 +56,10 @@ public class Address {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	public char[] getState() {
+	public String getState() {
 		return state;
 	}
-	public void setState(char[] state) {
+	public void setState(String state) {
 		this.state = state;
 	}
 	public String getZipCode() {
