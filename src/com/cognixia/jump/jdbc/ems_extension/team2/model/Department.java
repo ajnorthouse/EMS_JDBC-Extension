@@ -1,6 +1,5 @@
 package com.cognixia.jump.jdbc.ems_extension.team2.model;
 
-import java.util.ArrayList;
 /***
  * 
  * @author Raymund Palafox
@@ -15,17 +14,7 @@ public class Department
 	private String name;
 	private String phoneNumber;
 	private int budget;
-	private ArrayList<Employee> employee;
 	private int companyId;
-	public Department(String name, String phoneNumber, int budget, ArrayList<Employee> employee, int companyId) {
-		super();
-		this.id = generateNewId();
-		this.name = name;
-		this.budget = budget;
-		this.phoneNumber = phoneNumber;
-		this.employee = employee;
-		this.companyId = companyId;
-	}
 
 	//Constructor
 	public Department(String name, String phoneNumber, int budget, int companyId)
@@ -33,7 +22,6 @@ public class Department
 		super();
 		this.id = generateNewId();
 		this.name = name;
-		this.employee = new ArrayList<Employee>();
 		this.phoneNumber = phoneNumber;
 		this.budget = budget;
 		this.companyId = companyId;
@@ -45,61 +33,22 @@ public class Department
 		idCounter++;
 		return idCounter;
 	}
-	//This method allows the user to add a new employee to a department
-	public void addEmployee(Employee emp){
-			employee.add(emp);
-			System.out.println(emp.getFirstName() + " " + emp.getLastName() + " has been added to the department!");
-	}
-	//This method removes an employee from a department
-	public void removeEmployee(Employee emp) {
-		for (int iterator = 0; iterator < employee.size(); iterator++) {
-			if ((employee.get(iterator)).getId() == emp.getId()) {
-				employee.remove(iterator);
-				break;
-			}
-		}
-	}
-	//This method allows the user to remove an employee by ID
-	public boolean removeEmployeeByID(int id) {
-		Employee emplToRemove = getEmployeeByID(id);
-		
-		if (emplToRemove != null) {
-			employee.remove(emplToRemove);
-			return true;
-		}
-		
-		return false;
-	}
+	
 	//Lists the deparment's information
 	public String listInfo() {
-		return "Department [id = " + id + ", name = " + name + ", phoneNumber = " + phoneNumber + ", budget = " + budget
-				+ ", number of Employees = " + employee.size() + "]";
+		return "Department [id = " + id + ", name = " + name + ", phoneNumber = " + phoneNumber + ", budget = " + budget + "]";
 	}
 	//Lists the department's assigned employees
 	public String listEmployees() {
 		StringBuilder strBuilder = new StringBuilder("");
 		strBuilder.append("\nCurrently Assigned Employees:\n");
 		strBuilder.append("ID - Name:\n");
-		for (Employee employee : employee) {
-			strBuilder.append(employee.getId() + " - ");
-			strBuilder.append(employee.getFirstName() + " ");
-			strBuilder.append(employee.getLastName() + "\n");
-		}
 		return strBuilder.toString();
 	}
 	//End of class methods
 	
 	
 	//Getters and Setters
-	public Employee getEmployeeByID(int id) {
-		
-		for (int i = 0; i < employee.size(); i++) {
-			Employee empl = employee.get(i);
-			if (empl.getId() == id) return empl;
-		}
-		
-		return null;
-	}
 	public int getId() {
 		return id;
 	}
@@ -124,12 +73,6 @@ public class Department
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	public ArrayList<Employee> getEmployee() {
-		return employee;
-	}
-	public void setEmployee(ArrayList<Employee> employee) {
-		this.employee = employee;
-	}
 	/**
 	 * @return	the companyId
 	 */
@@ -147,6 +90,6 @@ public class Department
 	@Override
 	public String toString() {
 		return "Department [id=" + id + ", name=" + name + ", phoneNumber=" + phoneNumber + ", budget=" + budget
-				+ ", employee=" + employee + ", companyId=" + companyId + "]";
+				+ ", companyId=" + companyId + "]";
 	}
 }
