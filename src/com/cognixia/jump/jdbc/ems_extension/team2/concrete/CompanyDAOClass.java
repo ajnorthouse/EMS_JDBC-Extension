@@ -15,16 +15,18 @@ import com.cognixia.jump.jdbc.ems_extension.team2.model.Department;
 public class CompanyDAOClass implements CompanyDAO {
 	
 	Connection conn = ConnectionManager.getConnection();
-	String allCompsQuery = "SELECT c.*, a.address FROM company AS c INNER JOIN address AS a on c.address_id = a.address_id";
-	PreparedStatement allComps = conn.prepareStatement(allCompsQuery);
-	
+	private String idMatchClause = " WHERE comp_id = ? ";
+	private String companySelectClause = " SELECT c.*, a.address FROM company AS c INNER JOIN address AS a on c.address_id = a.address_id ";
 	
 	@Override
 	public List<Company> getAllCompanies() {
 		// TODO Auto-generated method stub
 		
+		String allCompsQuery = companySelectClause;
+		PreparedStatement allCompsStmt = conn.prepareStatement(allCompsQuery);
+		
 		List<Company> list = new ArrayList<Company>();
-		ResultSet compResults = allComps.executeQuery();
+		ResultSet compResults = allCompsStmt.executeQuery();
 		
 		do {
 			list.add(createCompanyObject(compResults));
@@ -33,10 +35,16 @@ public class CompanyDAOClass implements CompanyDAO {
 		return list;
 	}
 
+	
 	@Override
 	public Company getCompany(int id) {
 		// TODO Auto-generated method stub
-		return null;
+		String compQuery = companySelectClause + idMatchClause;
+		PreparedStatement compStmt = conn.prepareStatement(compQuery);
+		compStmt.setString(1, String.valueOf(id));
+		
+		ResultSet compResult = compStmt.executeQuery();
+		return createCompanyObject(compResult);
 	}
 
 	@Override
