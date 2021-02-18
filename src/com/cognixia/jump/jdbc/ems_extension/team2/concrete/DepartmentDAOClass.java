@@ -1,6 +1,7 @@
 package com.cognixia.jump.jdbc.ems_extension.team2.concrete;
 
 import java.sql.Connection;
+import java.sql.Statement;
 import java.util.List;
 
 import com.cognixia.jump.jdbc.ems_extension.team2.ConnectionManager;
