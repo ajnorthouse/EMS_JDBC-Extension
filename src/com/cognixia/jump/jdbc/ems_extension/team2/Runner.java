@@ -19,7 +19,7 @@ public class Runner {
 		companyId = startUp(scanner);
 		
 		//holds the main logic
-		//mainLoop(scanner, fileHandler, company, keepProgramRunning);
+		//userLoop(scanner, fileHandler, keepProgramRunning);
 		
 		//final set of logic before the program terminates
 		//shutDown(scanner, fileHandler, company);
@@ -30,6 +30,8 @@ public class Runner {
 		scanner.close();
 	}
 	
+	
+	// setup, main loop, and shutdown methods
 	private static int startUp(Scanner scanner) {
 		System.out.println("...  Loading database connection");
 		CompanyDAOClass companyDAO = new CompanyDAOClass();
@@ -41,12 +43,10 @@ public class Runner {
 			System.out.println("... No created companies were detected");
 			System.out.println("... Creating company from user input:");
 			
-			////reuses method for creating company
-			//Company tempCompany = createCompany(scanner);
-			//companyDAO.createCompany(tempCompany);
-			//return tempCompany.getId();
-			System.out.println("Nice");
-			return 0;
+			//reuses method for creating company
+			Company tempCompany = createCompany(scanner);
+			companyDAO.createCompany(tempCompany);
+			return tempCompany.getId();
 		} else {
 			//if one exists, ask user what company they'd like to work with
 			System.out.println("... Found " + companies.size() + " Companies: ");
@@ -56,5 +56,22 @@ public class Runner {
 			System.out.print("ID of company you'd like to use: ");
 			return scanner.nextInt();
 		}
+	}
+	
+	private static void userLoop() {
+		
+	}
+	
+	private static void shutdown() {
+		
+	}
+
+	
+	// user choices methods
+	
+	
+	// helper methods
+	private static Company createCompany(Scanner scanner) {
+		return null;
 	}
 }
