@@ -1,12 +1,16 @@
 package com.cognixia.jump.jdbc.ems_extension.team2.concrete;
 
+import java.sql.Connection;
 import java.util.List;
 
+import com.cognixia.jump.jdbc.ems_extension.team2.ConnectionManager;
 import com.cognixia.jump.jdbc.ems_extension.team2.interfaces.EmployeeDAO;
 import com.cognixia.jump.jdbc.ems_extension.team2.model.Employee;
 
 public class EmployeeDAOClass implements EmployeeDAO {
-
+	
+	Connection conn = ConnectionManager.getConnection();
+	
 	@Override
 	public List<Employee> getAllEmployees() {
 		// TODO Auto-generated method stub
