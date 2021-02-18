@@ -6,10 +6,10 @@ package com.cognixia.jump.jdbc.ems_extension.team2.model;
  *
  */
 public class Employee {
-	
+
 	//static variables
 	private static int idCounter = 0;
-	
+
 	//object variables
 	private int id;
 	private int departmentId;
@@ -18,8 +18,8 @@ public class Employee {
 	private String jobTitle;
 	private String phoneNumber;
 	private int addressId;
-	
-	
+
+
 	//constructors
 	/**
 	 * The default constructor for the class that provides all the variables needed to create a full Employee object.
@@ -44,16 +44,16 @@ public class Employee {
 		this.addressId = addressId;
 	}
 
-	
-	
+
+
 	//class methods
 	private int generateNewId() {
 		idCounter++;
 		return idCounter;
 	}
-	
-	
-	
+
+
+
 	//getters and setters
 
 	/**
