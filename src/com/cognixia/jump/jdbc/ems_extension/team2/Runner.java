@@ -59,8 +59,9 @@ public class Runner {
 			System.out.println("... Found " + companies.size() + " Companies: ");
 			for (Company company : companies ) {
 				System.out.printf("ID: %-2d - Name: %s%n", company.getId(), company.getName());
-				idCounter++;
+				if (idCounter < company.getId()) idCounter = company.getId();
 			}
+			idCounter++;
 			System.out.printf("ID: %-2d - Name: %s%n", idCounter, "[Create a New Company]");
 			System.out.println("\nID of company you'd like to use: ");
 			int userChoice = Integer.parseInt(scanner.nextLine());
@@ -116,7 +117,7 @@ public class Runner {
 				//===Employee Options:
 				case 1:
 					System.out.println("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~");
-					employeeOptions(scanner, employeeDAO);
+					employeeOptions(scanner, employeeDAO, companyId);
 					break;
 				
 				//===Department Options:
@@ -243,7 +244,7 @@ public class Runner {
 		
 	}
 
-	private static void employeeOptions(Scanner scanner, EmployeeDAOClass employeeDAO) {
+	private static void employeeOptions(Scanner scanner, EmployeeDAOClass employeeDAO, int companyId) {
 		//temp variables:
 		Employee tempEmployee = null;
 		
@@ -260,10 +261,9 @@ public class Runner {
 		
 			//gets info on an employee
 			case 1:
-				//asks for employee ID and department ID
 				System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 				System.out.println("Printing Employess:");
-				for (Employee employee : employeeDAO.getAllEmployees()) {
+				for (Employee employee : employeeDAO.getAllEmployeesOfCompany(companyId)) {
 					String employeeName = employee.getFirstName() + " " + employee.getLastName();
 					System.out.printf("ID: %-2d, Name: %-30s%n", employee.getId(), employeeName);
 				}
