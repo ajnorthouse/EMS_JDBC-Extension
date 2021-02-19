@@ -91,7 +91,7 @@ public class DepartmentDAOClass implements DepartmentDAO {
 		try {
 			PreparedStatement deleteStmt = conn.prepareStatement(deleteQuery);
 			deleteStmt.setInt(1, d.getId());
-			return deleteStmt.execute();
+			return !deleteStmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;

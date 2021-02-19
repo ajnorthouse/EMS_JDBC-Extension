@@ -116,7 +116,7 @@ public class EmployeeDAOClass implements EmployeeDAO {
 		try {
 			PreparedStatement deleteStmt = conn.prepareStatement(deleteQuery);
 			deleteStmt.setInt(1, em.getId());
-			return deleteStmt.execute();
+			return !deleteStmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;

@@ -90,7 +90,7 @@ public class AddressDAOClass implements AddressDAO{
 		try {
 			PreparedStatement deleteStmt = conn.prepareStatement(deleteQuery);
 			deleteStmt.setInt(1, addressId);
-			return deleteStmt.execute();
+			return !deleteStmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
